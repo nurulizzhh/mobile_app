@@ -15,7 +15,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(8),
+      margin: EdgeInsets.all(15),
       child: ListView.builder(
         itemCount: items.length,
         itemBuilder: (context, index) {
@@ -25,36 +25,36 @@ class _CategoriesPageState extends State<CategoriesPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ListCategoriesPage(selectedCategory: item.jurusan),
+                  builder: (context) => ListCategoriesPage(selectedCategory: item.kategori),
                 ),
               );
             },
             child:  Container(
                 decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 255, 190, 106),
+                  color: Color.fromARGB(188, 255, 254, 254),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.grey, 
-                      offset: Offset(0, 2), 
-                      blurRadius: 5, 
-                      spreadRadius: 2, 
+                      color: Color.fromARGB(255, 199, 199, 199), 
+                      offset: Offset(0, 1), 
+                      blurRadius: 1, 
+                      spreadRadius: 1, 
                     ),
                   ],
-                  borderRadius: BorderRadius.circular(10)
+                  borderRadius: BorderRadius.circular(15)
                 ),
                 margin: EdgeInsets.all(5),
                 child: Row(
                   children: [
                     Expanded(
                       child: Container(
-                        padding: EdgeInsets.all(7),
+                        padding: EdgeInsets.all(10),
                         child: Image.asset(item.foto),
                       ),
                     ),
                     Expanded(
-                      child: Text(item.jurusan, 
+                      child: Text(item.kategori, 
                       style: TextStyle(
-                        color: Colors.white, 
+                        color: Colors.black, 
                         fontSize: 24,
                         fontWeight: FontWeight.bold
                       ), 

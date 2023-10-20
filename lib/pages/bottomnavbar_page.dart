@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_app/pages/home_page.dart';
 import 'package:mobile_app/pages/favourite_page.dart';
-import 'package:mobile_app/pages/profile_page.dart';
 import 'package:mobile_app/pages/categories_page.dart';
+import 'package:mobile_app/pages/profil_page.dart';
 
 class MyBottomNavigationBar extends StatefulWidget {
   @override
@@ -28,6 +28,7 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       body: _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         elevation: 20,
@@ -48,12 +49,12 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
             label: "Categories",
           ),
           BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.person_solid, size: 30,),
+            icon: Icon(CupertinoIcons.person_fill, size: 30,),
             label: "Profile",
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Color.fromARGB(255, 248, 163, 52),
+        selectedItemColor: Colors.black,
         unselectedItemColor: Colors.grey,
         onTap: _onItemTapped,
       ),

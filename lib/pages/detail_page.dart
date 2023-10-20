@@ -4,8 +4,7 @@ import 'package:mobile_app/model/menu_model.dart';
 
 class DetailPage extends StatelessWidget {
 
-  final FavouriteMenuModel item;
-
+  final MenuModel item;
   DetailPage({required this.item});
 
   @override
@@ -13,6 +12,17 @@ class DetailPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
+        centerTitle: true,
+        title: Text(
+          '${item.nama}',
+          style: GoogleFonts.breeSerif(
+            fontSize: 25,
+            fontWeight: FontWeight.w900,
+            color: Colors.black
+          ),
+          textAlign: TextAlign.left,
+        ),
+        toolbarHeight: 50,
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: GestureDetector(
@@ -43,73 +53,179 @@ class DetailPage extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 18)),
             Container(
               child: Column(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(bottom: 8),
-                    child: Text(
-                      '${item.nama}',
-                      style: GoogleFonts.breeSerif(
-                        fontSize: 36,
-                        fontWeight: FontWeight.w900,
-                        color: Colors.black
-                      ),
-                      textAlign: TextAlign.left,
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(bottom: 16),
-                    child: Text('data'),
-                  ),
+                children: [  
                   Image.asset('${item.foto}'),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey[50],
-                      borderRadius: BorderRadius.all(Radius.circular(50)),
+                  SizedBox(height: 10,),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Container(
+                        height: 55,
+                        width: 150,
+                        padding: EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[50],
+                          borderRadius: BorderRadius.all(Radius.circular(50)),
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color.fromARGB(255, 199, 199, 199), 
+                              offset: Offset(0, 0),
+                              blurRadius: 5, 
+                              spreadRadius: 1, 
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          children: [
+                            Container(
+                              height: 44,
+                              width: 44,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: const Color.fromARGB(255, 199, 199, 199), 
+                                    offset: Offset(0, 0),
+                                    blurRadius: 5, 
+                                    spreadRadius: 1, 
+                                  ),
+                                ],
+                              ),
+                              child: Center(
+                                child: Text(
+                                  '${item.kalori}',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 20,),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Kalori',
+                                  style: GoogleFonts.nunito(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold
+                                  ),
+                                ),
+                                Text('Kcal',
+                                  style: GoogleFonts.poppins(
+                                    color: Colors.grey[400],
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold
+                                  ),
+                                )
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
+                      Container(
+                        height: 55,
+                        width: 150,
+                        padding: EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[50],
+                          borderRadius: BorderRadius.all(Radius.circular(50)),
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color.fromARGB(255, 199, 199, 199), 
+                              offset: Offset(0, 0),
+                              blurRadius: 5, 
+                              spreadRadius: 1, 
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          children: [
+                            Container(
+                              height: 44,
+                              width: 44,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: const Color.fromARGB(255, 199, 199, 199), 
+                                    offset: Offset(0, 0),
+                                    blurRadius: 5, 
+                                    spreadRadius: 1, 
+                                  ),
+                                ],
+                              ),
+                              child: Center(
+                                child: Text(
+                                  '${item.waktu}',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 20,),
+                            Text('Menit',
+                              style: GoogleFonts.nunito(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Text(
+                          'Bahan-bahan',
+                          style: GoogleFonts.varelaRound(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w800,
+                            color: Colors.black
+                          ),
+                        ),
+                        SizedBox(height: 5,),
+                        Text(
+                          '${item.bahan}',
+                          style: GoogleFonts.varelaRound(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: const Color.fromARGB(130, 0, 0, 0)
+                          )
+                        ),
+                        SizedBox(height: 30,),
+                        Text(
+                          'Langkah Memasak',
+                          style: GoogleFonts.varelaRound(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w800,
+                            color: Colors.black
+                          ),
+                        ),
+                        SizedBox(height: 5,),
+                        Text(
+                          '${item.tahap}',
+                          style: GoogleFonts.varelaRound(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: const Color.fromARGB(130, 0, 0, 0)
+                          )
+                        ),
+                      ],
                     ),
                   )
                 ],
               ),
             ),
-            Container(
-              child: Column(
-                children: [
-                  Text(''),
-                  Text('${item.bahan}'),
-                  Text('${item.tahap}'),
-                ],
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
-class DetailPage2 extends StatelessWidget {
-
-  final RecommendedMenuModel item;
-
-  DetailPage2({required this.item});
-
-    @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        color: Colors.white,
-        child: ListView(
-          children: [
-            Container(
-              child: Image.asset('${item.foto}'),
-            ),
-            Container(
-              child: Column(
-                children: [
-                  Text('${item.nama}'),
-                  Text('${item.bahan}'),
-                  Text('${item.tahap}'),
-                ],
-              ),
-            )
           ],
         ),
       ),

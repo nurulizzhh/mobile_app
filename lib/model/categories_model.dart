@@ -1,14 +1,14 @@
 class CategoryModel {
   
-  String jurusan;
+  String kategori;
   String foto;
 
-  CategoryModel({required this.jurusan, required this.foto});
+  CategoryModel({required this.kategori, required this.foto});
 }
 
 final List<CategoryModel> items = [
-    CategoryModel(jurusan: 'Breakfast', foto: 'images/breakfast.png'),
-    CategoryModel(jurusan: 'Lunch', foto: 'images/lunch.png'),
-    CategoryModel(jurusan: 'Dinner', foto: 'images/dinner.png'),
-    CategoryModel(jurusan: 'Dessert', foto: 'images/dessert.png'),
+    CategoryModel(kategori: 'Breakfast', foto: 'images/breakfast.png'),
+    CategoryModel(kategori: 'Lunch', foto: 'images/lunch.png'),
+    CategoryModel(kategori: 'Dinner', foto: 'images/dinner.png'),
+    CategoryModel(kategori: 'Dessert', foto: 'images/dessert.png'),
   ];
