@@ -1,6 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mobile_app/model/menu_model.dart';
+import 'package:mobile_app/model/recipe_model.dart';
 import 'package:mobile_app/pages/detail_page.dart';
 import 'package:mobile_app/pages/listcategories_page.dart';
 import 'package:mobile_app/pages/listmenu_page.dart';
@@ -14,14 +16,41 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List data_categories = [];
-  List data_recommended = [];
+  List<Category> dataCategories = [];
+  List<Detail> dataDetail = [];
+  bool isLoading = true;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  late User _user;
+  late String _userId;
+  late String _username = '';
+  late String _profile = '';
+
+  Future<void> _getUserData() async {
+    _user = _auth.currentUser!;
+    _userId = _user.uid;
+
+    DocumentSnapshot<Map<String, dynamic>> userSnapshot =
+        await _firestore.collection('users').doc(_userId).get();
+
+    Map<String, dynamic> userData = userSnapshot.data() ?? {};
+
+    // Set nilai variabel _username
+    setState(() {
+      _username = userData['username'];
+      _profile = userData['photoURL'];
+    });
+  }
 
   void Categories() async {
     try {
       Map data = await HttpService().getDatasCategory();
+      List<Category> categories = (data["categories"] as List)
+          .map((category) => Category.fromJson(category))
+          .toList();
       setState(() {
-        data_categories = data["categories"];
+        dataCategories = categories;
       });
     } catch (e) {
       print('Error fetching category data: $e');
@@ -31,11 +60,15 @@ class _HomePageState extends State<HomePage> {
   void Recommended() async {
     try {
       Map data = await HttpService().getRecommended();
+      List<Detail> detailItems =
+          (data["meals"] as List).map((item) => Detail.fromJson(item)).toList();
       setState(() {
-        data_recommended = data["meals"];
+        dataDetail = detailItems;
+        isLoading = false;
       });
     } catch (e) {
-      print('Error fetching category data: $e');
+      print('Error fetching recommended data: $e');
+      isLoading = false;
     }
   }
 
@@ -43,6 +76,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     Categories();
     Recommended();
+    _getUserData();
     super.initState();
   }
 
@@ -62,18 +96,19 @@ class _HomePageState extends State<HomePage> {
                   top: 40,
                 ),
                 child: Text(
-                  "Hello Nurul!",
+                  "Hello $_username!",
                   style: GoogleFonts.breeSerif(
-                      fontSize: 36,
-                      fontWeight: FontWeight.w900,
-                      color: Colors.white),
+                    fontSize: 36,
+                    fontWeight: FontWeight.w900,
+                    color: Colors.white,
+                  ),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 10, top: 30, right: 10),
                 child: CircleAvatar(
                   radius: 25,
-                  backgroundImage: AssetImage('images/profil.jpeg'),
+                  backgroundImage: NetworkImage(_profile),
                 ),
               )
             ],
@@ -81,21 +116,23 @@ class _HomePageState extends State<HomePage> {
           Padding(
             padding: const EdgeInsets.only(left: 10, top: 5, bottom: 10),
             child: Text(
-              "what would you like to cook today ?",
+              "What would you like to cook today?",
               style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600),
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
           Expanded(
             child: Container(
               decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20),
-                  )),
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                ),
+              ),
               child: Column(
                 children: [
                   Padding(
@@ -113,21 +150,21 @@ class _HomePageState extends State<HomePage> {
                     child: SizedBox(
                       height: 104,
                       child: ListView.builder(
-                        itemCount: data_categories.length,
+                        itemCount: dataCategories.length,
                         scrollDirection: Axis.horizontal,
                         itemBuilder: (BuildContext context, int index) {
-                          final category = data_categories[index];
+                          final category = dataCategories[index];
                           return Padding(
                             padding: const EdgeInsets.only(right: 10),
                             child: CategoryCircleAvatar(
-                              foto: category['strCategoryThumb'],
-                              label: category['strCategory'],
+                              foto: category.imageUrl,
+                              label: category.label,
                               onPressed: () {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => ListCategoriesPage(
-                                      selectedCategory: category['strCategory'],
+                                      selectedCategory: category.label,
                                     ),
                                   ),
                                 );
@@ -144,7 +181,7 @@ class _HomePageState extends State<HomePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Recomended',
+                          'Recommended',
                           style: TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold),
                         ),
@@ -160,9 +197,10 @@ class _HomePageState extends State<HomePage> {
                           child: Text(
                             'See All',
                             style: TextStyle(
-                                fontSize: 14,
-                                color: Color.fromARGB(255, 248, 163, 52),
-                                fontWeight: FontWeight.bold),
+                              fontSize: 14,
+                              color: Color.fromARGB(255, 248, 163, 52),
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         )
                       ],
@@ -171,150 +209,149 @@ class _HomePageState extends State<HomePage> {
                   Expanded(
                     child: Container(
                       child: SingleChildScrollView(
-                        child: ListView.builder(
-                          physics: NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: 4,
-                          itemBuilder: (context, index) {
-                            final item = data_recommended[index];
-                            return GestureDetector(
-                              onTap: () => Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                      builder: (context) => DetailPage(
-                                          item: data_recommended[index]))),
-                              child: Container(
-                                margin: EdgeInsets.only(
-                                  left: 10,
-                                  right: 10,
-                                  bottom: 10,
-                                ),
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 12, horizontal: 12),
-                                height: 110,
-                                width: MediaQuery.of(context).size.width,
-                                decoration: BoxDecoration(
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: const Color.fromARGB(
-                                          255, 223, 223, 223),
-                                      offset: Offset(0, 1),
-                                      blurRadius: 1,
-                                      spreadRadius: 1,
-                                    ),
-                                  ],
-                                  color: Color.fromARGB(188, 255, 254, 254),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Row(
-                                  children: [
-                                    Image.network(
-                                      item['strMealThumb'],
-                                      height: 180,
-                                      width: 120,
-                                      fit: BoxFit.contain,
-                                    ),
-                                    Expanded(
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 15),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              item['strCategory'],
-                                              style: TextStyle(
-                                                  fontSize: 14,
-                                                  color: Colors.blueGrey,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            SizedBox(
-                                              height: 5,
-                                            ),
-                                            Text(
-                                              item['strMeal'],
-                                              overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            SizedBox(
-                                              height: 7,
-                                            ),
-                                            Row(
-                                              children: [
-                                                Row(
-                                                  children: List.generate(
-                                                    5,
-                                                    (index) => Icon(
-                                                      Icons.star,
-                                                      color: Color.fromARGB(
-                                                          255, 248, 163, 52),
-                                                      size: 12,
-                                                    ),
-                                                  ),
-                                                ),
-                                                SizedBox(width: 15),
-                                                Text(
-                                                  item['strArea'],
-                                                  style: TextStyle(
-                                                      fontSize: 12,
-                                                      color: Color.fromARGB(
-                                                          255, 248, 163, 52),
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                ),
-                                                Text(
-                                                  ' Food',
-                                                  style: TextStyle(
-                                                      fontSize: 12,
-                                                      color: Color.fromARGB(
-                                                          255, 248, 163, 52),
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                ),
-                                              ],
-                                            ),
-                                            SizedBox(
-                                              height: 8,
-                                            ),
-                                            Row(
-                                              children: [
-                                                SizedBox(
-                                                  width: 5,
-                                                ),
-                                                Text(
-                                                  '# ',
-                                                  style: TextStyle(
-                                                      fontSize: 12,
-                                                      color: Colors.grey),
-                                                ),
-                                                Text(
-                                                  item['strTags'] ?? 'none',
-                                                  style: TextStyle(
-                                                      fontSize: 12,
-                                                      color: Colors.grey),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
+                        child: isLoading
+                            ? Center(child: CircularProgressIndicator())
+                            : ListView.builder(
+                                physics: NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                itemCount: 4,
+                                itemBuilder: (context, index) {
+                                  final item = dataDetail[index];
+                                  return GestureDetector(
+                                    onTap: () => Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) => DetailPage(
+                                          imageUrl: item.imageUrl,
+                                          category: item.category,
+                                          mealName: item.mealName,
+                                          area: item.area,
+                                          tags: item.tags ?? '',
                                         ),
                                       ),
                                     ),
-                                    Align(
-                                      alignment: Alignment.topRight,
-                                      child: IconButton(
-                                        onPressed: () {},
-                                        icon: Icon(Icons.favorite_outline),
-                                        color: Colors.grey,
+                                    child: Container(
+                                      margin: EdgeInsets.all(10),
+                                      padding: EdgeInsets.symmetric(
+                                        vertical: 12,
+                                        horizontal: 12,
+                                      ),
+                                      height: 110,
+                                      width: MediaQuery.of(context).size.width,
+                                      decoration: BoxDecoration(
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: const Color.fromARGB(
+                                                255, 223, 223, 223),
+                                            offset: Offset(0, 1),
+                                            blurRadius: 1,
+                                            spreadRadius: 1,
+                                          ),
+                                        ],
+                                        color:
+                                            Color.fromARGB(188, 255, 254, 254),
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Image.network(
+                                            item.imageUrl, // Correct property name
+                                            height: 180,
+                                            width: 120,
+                                            fit: BoxFit.contain,
+                                          ),
+                                          Expanded(
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 15),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    item.category, // Correct property name
+                                                    style: TextStyle(
+                                                      fontSize: 14,
+                                                      color: Colors.blueGrey,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  SizedBox(height: 5),
+                                                  Text(
+                                                    item.mealName, // Correct property name
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: TextStyle(
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  SizedBox(height: 7),
+                                                  Row(
+                                                    children: [
+                                                      Text(
+                                                        item.area, // Correct property name
+                                                        style: TextStyle(
+                                                          fontSize: 12,
+                                                          color: Colors.amber,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        ' Food',
+                                                        style: TextStyle(
+                                                          fontSize: 12,
+                                                          color: Colors.amber,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  SizedBox(height: 8),
+                                                  Row(
+                                                    children: [
+                                                      SizedBox(width: 5),
+                                                      Text(
+                                                        '# ',
+                                                        style: TextStyle(
+                                                          fontSize: 12,
+                                                          color: Colors.grey,
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        item.tags ??
+                                                            '-', // Correct property name
+                                                        style: TextStyle(
+                                                          fontSize: 12,
+                                                          color: Colors.grey,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                          Align(
+                                            alignment: Alignment.topRight,
+                                            child: IconButton(
+                                              onPressed: () {},
+                                              icon: Icon(
+                                                Icons.favorite_outline,
+                                                color: Colors.grey,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                  ],
-                                ),
+                                  );
+                                },
                               ),
-                            );
-                          },
-                        ),
                       ),
                     ),
                   ),

@@ -3,9 +3,12 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile_app/model/menu_model.dart';
 import 'package:mobile_app/pages/detail_page.dart';
 
-class FavoritePage extends StatelessWidget {
-  FavoritePage ({super.key});
+class FavoritePage extends StatefulWidget {
+  @override
+  State<FavoritePage> createState() => _FavoritePageState();
+}
 
+class _FavoritePageState extends State<FavoritePage> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -18,22 +21,20 @@ class FavoritePage extends StatelessWidget {
             child: Text(
               "Collection",
               style: GoogleFonts.breeSerif(
-                fontSize: 35,
-                fontWeight: FontWeight.w700,
-                color:Colors.white
-              ),
+                  fontSize: 35,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white),
             ),
           ),
           Expanded(
             child: Container(
               padding: EdgeInsets.only(top: 10),
               decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(30),
-                  topRight: Radius.circular(30),
-                )
-              ),
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30),
+                    topRight: Radius.circular(30),
+                  )),
               child: Column(
                 children: [
                   Padding(
@@ -41,10 +42,9 @@ class FavoritePage extends StatelessWidget {
                     child: Text(
                       'Your saved recipes',
                       style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black
-                      ),
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black),
                     ),
                   ),
                   Expanded(
@@ -57,22 +57,25 @@ class FavoritePage extends StatelessWidget {
                           itemBuilder: (context, index) {
                             final item = menu[index];
                             return GestureDetector(
-                              onTap: () => Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => DetailPage(item: menu[index],))
-                              ),
+                              onTap: () => {},
                               child: Container(
-                                margin: EdgeInsets.only(left: 10, right: 10, bottom: 10,),
-                                padding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                                margin: EdgeInsets.only(
+                                  left: 10,
+                                  right: 10,
+                                  bottom: 10,
+                                ),
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 12, horizontal: 12),
                                 height: 110,
                                 width: MediaQuery.of(context).size.width,
                                 decoration: BoxDecoration(
                                   boxShadow: [
                                     BoxShadow(
-                                      color: const Color.fromARGB(255, 223, 223, 223), 
-                                      offset: Offset(0, 1), 
-                                      blurRadius: 1, 
-                                      spreadRadius: 1, 
+                                      color: const Color.fromARGB(
+                                          255, 223, 223, 223),
+                                      offset: Offset(0, 1),
+                                      blurRadius: 1,
+                                      spreadRadius: 1,
                                     ),
                                   ],
                                   color: Color.fromARGB(188, 255, 254, 254),
@@ -88,28 +91,32 @@ class FavoritePage extends StatelessWidget {
                                     ),
                                     Expanded(
                                       child: Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 15),
                                         child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Text(
                                               item.kategori,
                                               style: TextStyle(
-                                                fontSize: 14,
-                                                color: Colors.blueGrey,
-                                                fontWeight: FontWeight.bold
-                                              ),
+                                                  fontSize: 14,
+                                                  color: Colors.blueGrey,
+                                                  fontWeight: FontWeight.bold),
                                             ),
-                                            SizedBox(height: 5,),
+                                            SizedBox(
+                                              height: 5,
+                                            ),
                                             Text(
                                               item.nama,
                                               overflow: TextOverflow.ellipsis,
                                               style: TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.bold
-                                              ),
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold),
                                             ),
-                                            SizedBox(height: 7,),
+                                            SizedBox(
+                                              height: 7,
+                                            ),
                                             Row(
                                               children: [
                                                 Row(
@@ -117,31 +124,36 @@ class FavoritePage extends StatelessWidget {
                                                     5,
                                                     (index) => Icon(
                                                       Icons.star,
-                                                      color: Color.fromARGB(255, 248, 163, 52),
+                                                      color: Color.fromARGB(
+                                                          255, 248, 163, 52),
                                                       size: 12,
                                                     ),
-                                                  ),        
+                                                  ),
                                                 ),
-                                                SizedBox(width:15),
+                                                SizedBox(width: 15),
                                                 Text(
                                                   item.kalori,
                                                   style: TextStyle(
-                                                    fontSize: 12,
-                                                    color: Color.fromARGB(255, 248, 163, 52),
-                                                    fontWeight: FontWeight.bold
-                                                  ),
+                                                      fontSize: 12,
+                                                      color: Color.fromARGB(
+                                                          255, 248, 163, 52),
+                                                      fontWeight:
+                                                          FontWeight.bold),
                                                 ),
                                                 Text(
                                                   ' Kalori',
                                                   style: TextStyle(
-                                                    fontSize: 12,
-                                                    color: Color.fromARGB(255, 248, 163, 52),
-                                                    fontWeight: FontWeight.bold
-                                                  ),
+                                                      fontSize: 12,
+                                                      color: Color.fromARGB(
+                                                          255, 248, 163, 52),
+                                                      fontWeight:
+                                                          FontWeight.bold),
                                                 ),
                                               ],
-                                            ),                      
-                                            SizedBox(height: 8,),
+                                            ),
+                                            SizedBox(
+                                              height: 8,
+                                            ),
                                             Row(
                                               children: [
                                                 Icon(
@@ -149,20 +161,20 @@ class FavoritePage extends StatelessWidget {
                                                   color: Colors.grey,
                                                   size: 14,
                                                 ),
-                                                SizedBox(width: 5,),
+                                                SizedBox(
+                                                  width: 5,
+                                                ),
                                                 Text(
                                                   item.waktu,
                                                   style: TextStyle(
-                                                    fontSize: 12,
-                                                    color: Colors.grey
-                                                  ),
+                                                      fontSize: 12,
+                                                      color: Colors.grey),
                                                 ),
                                                 Text(
                                                   ' Menit',
                                                   style: TextStyle(
-                                                    fontSize: 12,
-                                                    color: Colors.grey
-                                                  ),
+                                                      fontSize: 12,
+                                                      color: Colors.grey),
                                                 ),
                                               ],
                                             ),
@@ -173,7 +185,7 @@ class FavoritePage extends StatelessWidget {
                                     Align(
                                       alignment: Alignment.topRight,
                                       child: IconButton(
-                                        onPressed:(){}, 
+                                        onPressed: () {},
                                         icon: Icon(Icons.favorite),
                                         color: Colors.red,
                                       ),

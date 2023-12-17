@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_app/pages/home_page.dart';
 import 'package:mobile_app/pages/favourite_page.dart';
-import 'package:mobile_app/pages/categories_page.dart';
 import 'package:mobile_app/pages/profil_page.dart';
+import 'package:mobile_app/pages/search_page.dart';
 
 class MyBottomNavigationBar extends StatefulWidget {
   @override
@@ -14,8 +14,8 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
   int _selectedIndex = 0;
   final List<Widget> _pages = [
     HomePage(),
-    CategoriesPage(),
-    FavoritePage(),
+    SearchPage(),
+    // FavoritePage(),
     ProfilePage(),
   ];
 
@@ -50,13 +50,13 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
             ),
             label: "Search",
           ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              CupertinoIcons.heart_fill,
-              size: 30,
-            ),
-            label: "Favorite",
-          ),
+          // BottomNavigationBarItem(
+          //   icon: Icon(
+          //     CupertinoIcons.heart_fill,
+          //     size: 30,
+          //   ),
+          //   label: "Favorite",
+          // ),
           BottomNavigationBarItem(
             icon: Icon(
               CupertinoIcons.person_fill,

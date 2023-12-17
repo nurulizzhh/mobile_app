@@ -1,6 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:mobile_app/dumpdata.dart';
 import 'package:mobile_app/service/firebase_options.dart';
 import 'package:mobile_app/pages/onboarding_page.dart';
 
