@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_app/model/onboard_model.dart';
-import 'package:mobile_app/pages/bottomnavbar_page.dart';
 import 'package:mobile_app/pages/login_page.dart';
 
 class SplashScreen extends StatelessWidget {

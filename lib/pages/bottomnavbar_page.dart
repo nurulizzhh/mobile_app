@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_app/pages/home_page.dart';
-import 'package:mobile_app/pages/favourite_page.dart';
 import 'package:mobile_app/pages/profil_page.dart';
 import 'package:mobile_app/pages/search_page.dart';
 

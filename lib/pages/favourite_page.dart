@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile_app/model/menu_model.dart';
-import 'package:mobile_app/pages/detail_page.dart';
 
 class FavoritePage extends StatefulWidget {
   @override
