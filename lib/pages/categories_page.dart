@@ -3,7 +3,6 @@ import 'package:mobile_app/model/categories_model.dart';
 import 'package:mobile_app/pages/listcategories_page.dart';
 
 class CategoriesPage extends StatefulWidget {
-
   CategoriesPage({super.key});
 
   @override
@@ -11,7 +10,6 @@ class CategoriesPage extends StatefulWidget {
 }
 
 class _CategoriesPageState extends State<CategoriesPage> {
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -25,47 +23,47 @@ class _CategoriesPageState extends State<CategoriesPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ListCategoriesPage(selectedCategory: item.kategori),
+                  builder: (context) =>
+                      ListCategoriesPage(selectedCategory: item.kategori),
                 ),
               );
             },
-            child:  Container(
-                decoration: BoxDecoration(
+            child: Container(
+              decoration: BoxDecoration(
                   color: Color.fromARGB(188, 255, 254, 254),
                   boxShadow: [
                     BoxShadow(
-                      color: Color.fromARGB(255, 199, 199, 199), 
-                      offset: Offset(0, 1), 
-                      blurRadius: 1, 
-                      spreadRadius: 1, 
+                      color: Color.fromARGB(255, 199, 199, 199),
+                      offset: Offset(0, 1),
+                      blurRadius: 1,
+                      spreadRadius: 1,
                     ),
                   ],
-                  borderRadius: BorderRadius.circular(15)
-                ),
-                margin: EdgeInsets.all(5),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Container(
-                        padding: EdgeInsets.all(10),
-                        child: Image.asset(item.foto),
-                      ),
+                  borderRadius: BorderRadius.circular(15)),
+              margin: EdgeInsets.all(5),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      padding: EdgeInsets.all(10),
+                      child: Image.asset(item.foto),
                     ),
-                    Expanded(
-                      child: Text(item.kategori, 
-                      style: TextStyle(
-                        color: Colors.black, 
+                  ),
+                  Expanded(
+                      child: Text(
+                    item.kategori,
+                    style: TextStyle(
+                        color: Colors.black,
                         fontSize: 24,
-                        fontWeight: FontWeight.bold
-                      ), 
-                      textAlign: TextAlign.center,)
-                    ),
-                  ],
-                ),
+                        fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  )),
+                ],
               ),
+            ),
           );
         },
-      ), 
+      ),
     );
   }
 }

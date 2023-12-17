@@ -1,9 +1,34 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_app/model/menu_model.dart';
 import 'package:mobile_app/pages/bottomnavbar_page.dart';
 import 'package:mobile_app/pages/detail_page.dart';
+import 'package:mobile_app/service/http_service.dart';
 
-class ListMenuPage extends StatelessWidget {
+class ListMenuPage extends StatefulWidget {
+  ListMenuPage({super.key});
+
+  @override
+  State<ListMenuPage> createState() => _ListMenuPageState();
+}
+
+class _ListMenuPageState extends State<ListMenuPage> {
+  List data_recommended = [];
+
+  void Recommended() async {
+    try {
+      Map data = await HttpService().getRecommended();
+      setState(() {
+        data_recommended = data["meals"];
+      });
+    } catch (e) {
+      print('Error fetching category data: $e');
+    }
+  }
+
+  @override
+  void initState() {
+    Recommended();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,9 +45,9 @@ class ListMenuPage extends StatelessWidget {
                     color: Colors.white,
                     onPressed: () {
                       Navigator.push(
-                        context, MaterialPageRoute(builder:
-                        (context) => MyBottomNavigationBar())
-                      );
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => MyBottomNavigationBar()));
                     },
                     icon: const Icon(
                       Icons.arrow_back,
@@ -30,12 +55,11 @@ class ListMenuPage extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    "All Recipes",
+                    "Recipes",
                     style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold
-                    ),
+                        color: Colors.white,
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
@@ -44,12 +68,11 @@ class ListMenuPage extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.only(top: 10),
                 decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(30),
-                    topRight: Radius.circular(30),
-                  )
-                ),
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(30),
+                      topRight: Radius.circular(30),
+                    )),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -58,10 +81,9 @@ class ListMenuPage extends StatelessWidget {
                       child: Text(
                         "Let's make your own food!",
                         style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black
-                        ),
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black),
                       ),
                     ),
                     Expanded(
@@ -70,24 +92,29 @@ class ListMenuPage extends StatelessWidget {
                           child: ListView.builder(
                             physics: NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
-                            itemCount: menu.length,
+                            itemCount: data_recommended.length,
                             itemBuilder: (context, index) {
-                              final item = menu[index];
+                              final item = data_recommended[index];
                               return GestureDetector(
                                 onTap: () => Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => DetailPage(item: menu[index]),
+                                    MaterialPageRoute(
+                                        builder: (context) => DetailPage(
+                                            item: data_recommended[index]))),
+                                child: Container(
+                                  margin: EdgeInsets.only(
+                                    left: 10,
+                                    right: 10,
+                                    bottom: 10,
                                   ),
-                                ),
-                                  child: Container(
-                                  margin: EdgeInsets.only(left: 10, right: 10, bottom: 10,),
-                                  padding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 12, horizontal: 12),
                                   height: 110,
                                   width: MediaQuery.of(context).size.width,
                                   decoration: BoxDecoration(
                                     boxShadow: [
                                       BoxShadow(
-                                        color: const Color.fromARGB(255, 223, 223, 223),
+                                        color: const Color.fromARGB(
+                                            255, 223, 223, 223),
                                         offset: Offset(0, 1),
                                         blurRadius: 1,
                                         spreadRadius: 1,
@@ -98,90 +125,84 @@ class ListMenuPage extends StatelessWidget {
                                   ),
                                   child: Row(
                                     children: [
-                                      Image.asset(
-                                        item.foto,
+                                      Image.network(
+                                        item['strMealThumb'],
                                         height: 180,
                                         width: 120,
                                         fit: BoxFit.contain,
                                       ),
                                       Expanded(
                                         child: Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: 15),
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 15),
                                           child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
                                               Text(
-                                                item.kategori,
+                                                item['strCategory'],
                                                 style: TextStyle(
-                                                  fontSize: 14,
-                                                  color: Colors.blueGrey,
-                                                  fontWeight: FontWeight.bold
-                                                ),
+                                                    fontSize: 14,
+                                                    color: Colors.blueGrey,
+                                                    fontWeight:
+                                                        FontWeight.bold),
                                               ),
-                                              SizedBox(height: 5,),
+                                              SizedBox(
+                                                height: 5,
+                                              ),
                                               Text(
-                                                item.nama,
+                                                item['strMeal'],
                                                 overflow: TextOverflow.ellipsis,
                                                 style: TextStyle(
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.bold
-                                                ),
+                                                    fontSize: 18,
+                                                    fontWeight:
+                                                        FontWeight.bold),
                                               ),
-                                              SizedBox(height: 7,),
+                                              SizedBox(
+                                                height: 7,
+                                              ),
                                               Row(
                                                 children: [
-                                                  Row(
-                                                    children: List.generate(
-                                                      5,
-                                                      (index) => Icon(
-                                                        Icons.star,
-                                                        color: Color.fromARGB(255, 248, 163, 52),
-                                                        size: 12,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  SizedBox(width: 15),
                                                   Text(
-                                                    item.kalori,
+                                                    item['strArea'],
                                                     style: TextStyle(
-                                                      fontSize: 12,
-                                                      color: Color.fromARGB(255, 248, 163, 52),
-                                                      fontWeight: FontWeight.bold
-                                                    ),
+                                                        fontSize: 12,
+                                                        color: Color.fromARGB(
+                                                            255, 248, 163, 52),
+                                                        fontWeight:
+                                                            FontWeight.bold),
                                                   ),
                                                   Text(
-                                                  ' Kalori',
-                                                  style: TextStyle(
-                                                    fontSize: 12,
-                                                    color: Color.fromARGB(255, 248, 163, 52),
-                                                    fontWeight: FontWeight.bold
+                                                    ' Food',
+                                                    style: TextStyle(
+                                                        fontSize: 12,
+                                                        color: Color.fromARGB(
+                                                            255, 248, 163, 52),
+                                                        fontWeight:
+                                                            FontWeight.bold),
                                                   ),
-                                                ),
                                                 ],
                                               ),
-                                              SizedBox(height: 8,),
+                                              SizedBox(
+                                                height: 8,
+                                              ),
                                               Row(
                                                 children: [
-                                                  Icon(
-                                                    Icons.access_time,
-                                                    color: Colors.grey,
-                                                    size: 14,
+                                                  SizedBox(
+                                                    width: 5,
                                                   ),
-                                                  SizedBox(width: 5,),
                                                   Text(
-                                                    item.waktu,
+                                                    '# ',
                                                     style: TextStyle(
-                                                      fontSize: 12,
-                                                      color: Colors.grey
-                                                    ),
+                                                        fontSize: 12,
+                                                        color: Colors.grey),
                                                   ),
                                                   Text(
-                                                  ' Menit',
-                                                  style: TextStyle(
-                                                    fontSize: 12,
-                                                    color: Colors.grey
+                                                    item['strTags'] ?? 'none',
+                                                    style: TextStyle(
+                                                        fontSize: 12,
+                                                        color: Colors.grey),
                                                   ),
-                                                ),
                                                 ],
                                               ),
                                             ],
@@ -191,7 +212,7 @@ class ListMenuPage extends StatelessWidget {
                                       Align(
                                         alignment: Alignment.topRight,
                                         child: IconButton(
-                                          onPressed: (){},
+                                          onPressed: () {},
                                           icon: Icon(Icons.favorite_outline),
                                           color: Colors.grey,
                                         ),

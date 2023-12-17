@@ -14,8 +14,8 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
   int _selectedIndex = 0;
   final List<Widget> _pages = [
     HomePage(),
-    FavoritePage(),
     CategoriesPage(),
+    FavoritePage(),
     ProfilePage(),
   ];
 
@@ -32,24 +32,36 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
       body: _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         elevation: 20,
-         type: BottomNavigationBarType.fixed,
+        type: BottomNavigationBarType.fixed,
         showSelectedLabels: true,
         showUnselectedLabels: true,
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.house_fill, size: 30,),
+            icon: Icon(
+              CupertinoIcons.house_fill,
+              size: 30,
+            ),
             label: "Home",
           ),
           BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.heart_fill, size: 30,),
+            icon: Icon(
+              CupertinoIcons.search,
+              size: 30,
+            ),
+            label: "Search",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              CupertinoIcons.heart_fill,
+              size: 30,
+            ),
             label: "Favorite",
           ),
           BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.square_grid_2x2_fill, size: 30,),
-            label: "Categories",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.person_fill, size: 30,),
+            icon: Icon(
+              CupertinoIcons.person_fill,
+              size: 30,
+            ),
             label: "Profile",
           ),
         ],
@@ -61,9 +73,3 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
     );
   }
 }
-
-
-
-
-
-

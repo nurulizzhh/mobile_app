@@ -4,9 +4,47 @@ import 'package:mobile_app/model/menu_model.dart';
 import 'package:mobile_app/pages/detail_page.dart';
 import 'package:mobile_app/pages/listcategories_page.dart';
 import 'package:mobile_app/pages/listmenu_page.dart';
+import 'package:mobile_app/service/http_service.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  List data_categories = [];
+  List data_recommended = [];
+
+  void Categories() async {
+    try {
+      Map data = await HttpService().getDatasCategory();
+      setState(() {
+        data_categories = data["categories"];
+      });
+    } catch (e) {
+      print('Error fetching category data: $e');
+    }
+  }
+
+  void Recommended() async {
+    try {
+      Map data = await HttpService().getRecommended();
+      setState(() {
+        data_recommended = data["meals"];
+      });
+    } catch (e) {
+      print('Error fetching category data: $e');
+    }
+  }
+
+  @override
+  void initState() {
+    Categories();
+    Recommended();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,14 +57,16 @@ class HomePage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Padding(
-                padding: const EdgeInsets.only(left: 10, top: 40,),
+                padding: const EdgeInsets.only(
+                  left: 10,
+                  top: 40,
+                ),
                 child: Text(
                   "Hello Nurul!",
                   style: GoogleFonts.breeSerif(
-                    fontSize: 36,
-                    fontWeight: FontWeight.w900,
-                    color: Colors.white
-                  ),
+                      fontSize: 36,
+                      fontWeight: FontWeight.w900,
+                      color: Colors.white),
                 ),
               ),
               Padding(
@@ -43,116 +83,59 @@ class HomePage extends StatelessWidget {
             child: Text(
               "what would you like to cook today ?",
               style: TextStyle(
-                color:Colors.white,
-                fontSize: 16,
-                fontWeight: FontWeight.w600
-              ),
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.all(12),
-            child: TextField(
-              style: TextStyle(color: Colors.white),
-              cursorColor: const Color.fromARGB(115, 151, 151, 151),
-              decoration: InputDecoration(
-                fillColor: Color.fromARGB(169, 94, 94, 94),
-                filled: true,
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                    borderSide: const BorderSide(
-                      width: 0,
-                      style: BorderStyle.none,
-                    )),
-                contentPadding: const EdgeInsets.symmetric(
-                  vertical: 0,
-                  horizontal: 20,
-                ),
-                prefixIcon: const Icon(
-                  Icons.search_outlined,
-                  color: Color.fromARGB(115, 255, 255, 255),
-                  size: 26,
-                ),
-                hintText: 'Search for recipes',
-                hintStyle:
-                    TextStyle(fontSize: 16, color: const Color.fromARGB(115, 255, 255, 255)),
-              ),
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600),
             ),
           ),
           Expanded(
-            child: Container(            
+            child: Container(
               decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20),
-                  topRight: Radius.circular(20),
-                )
-              ),
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20),
+                  )),
               child: Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(left: 0, top: 10, bottom: 10),
-                    child: Text('Explore',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold
-                      ),
+                    padding:
+                        const EdgeInsets.only(left: 0, top: 10, bottom: 10),
+                    child: Text(
+                      'Explore',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
-                    child: 
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: <Widget>[
-                        CategoryCircleAvatar(
-                          foto: 'images/breakfast.png',
-                          label: 'Breakfast',
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ListCategoriesPage(selectedCategory: 'Breakfast'),
-                              ),
-                            );
-                          },
-                        ),
-                        CategoryCircleAvatar(
-                          foto: 'images/lunch.png',
-                          label: 'Lunch',
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ListCategoriesPage(selectedCategory: 'Lunch'),
-                              ),
-                            );
-                          },
-                        ),
-                        CategoryCircleAvatar(
-                          foto: 'images/dinner.png',
-                          label: 'Dinner',
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ListCategoriesPage(selectedCategory: 'Dinner'),
-                              ),
-                            );
-                          },
-                        ),
-                        CategoryCircleAvatar(
-                          foto: 'images/dessert.png',
-                          label: 'Dessert',
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ListCategoriesPage(selectedCategory: 'Dessert'),
-                              ),
-                            );
-                          },
-                        ),
-                      ],
+                    padding:
+                        const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+                    child: SizedBox(
+                      height: 104,
+                      child: ListView.builder(
+                        itemCount: data_categories.length,
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (BuildContext context, int index) {
+                          final category = data_categories[index];
+                          return Padding(
+                            padding: const EdgeInsets.only(right: 10),
+                            child: CategoryCircleAvatar(
+                              foto: category['strCategoryThumb'],
+                              label: category['strCategory'],
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ListCategoriesPage(
+                                      selectedCategory: category['strCategory'],
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   ),
                   Padding(
@@ -160,11 +143,10 @@ class HomePage extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Recomended',
+                        Text(
+                          'Recomended',
                           style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold
-                          ),
+                              fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                         GestureDetector(
                           onTap: () {
@@ -178,10 +160,9 @@ class HomePage extends StatelessWidget {
                           child: Text(
                             'See All',
                             style: TextStyle(
-                              fontSize: 14,
-                              color: Color.fromARGB(255, 248, 163, 52),
-                              fontWeight: FontWeight.bold
-                            ),
+                                fontSize: 14,
+                                color: Color.fromARGB(255, 248, 163, 52),
+                                fontWeight: FontWeight.bold),
                           ),
                         )
                       ],
@@ -193,26 +174,32 @@ class HomePage extends StatelessWidget {
                         child: ListView.builder(
                           physics: NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
-                          itemCount: 3,
+                          itemCount: 4,
                           itemBuilder: (context, index) {
-                            final item = menu[index];
+                            final item = data_recommended[index];
                             return GestureDetector(
                               onTap: () => Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => DetailPage(item: menu[index]))
-                              ),
+                                  MaterialPageRoute(
+                                      builder: (context) => DetailPage(
+                                          item: data_recommended[index]))),
                               child: Container(
-                                margin: EdgeInsets.only(left: 10, right: 10, bottom: 10,),
-                                padding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                                margin: EdgeInsets.only(
+                                  left: 10,
+                                  right: 10,
+                                  bottom: 10,
+                                ),
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 12, horizontal: 12),
                                 height: 110,
                                 width: MediaQuery.of(context).size.width,
                                 decoration: BoxDecoration(
                                   boxShadow: [
                                     BoxShadow(
-                                      color: const Color.fromARGB(255, 223, 223, 223), 
-                                      offset: Offset(0, 1), 
-                                      blurRadius: 1, 
-                                      spreadRadius: 1, 
+                                      color: const Color.fromARGB(
+                                          255, 223, 223, 223),
+                                      offset: Offset(0, 1),
+                                      blurRadius: 1,
+                                      spreadRadius: 1,
                                     ),
                                   ],
                                   color: Color.fromARGB(188, 255, 254, 254),
@@ -220,36 +207,40 @@ class HomePage extends StatelessWidget {
                                 ),
                                 child: Row(
                                   children: [
-                                    Image.asset(
-                                      item.foto,
+                                    Image.network(
+                                      item['strMealThumb'],
                                       height: 180,
                                       width: 120,
                                       fit: BoxFit.contain,
                                     ),
                                     Expanded(
                                       child: Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 15),
                                         child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              item.kategori,
+                                              item['strCategory'],
                                               style: TextStyle(
-                                                fontSize: 14,
-                                                color: Colors.blueGrey,
-                                                fontWeight: FontWeight.bold
-                                              ),
+                                                  fontSize: 14,
+                                                  color: Colors.blueGrey,
+                                                  fontWeight: FontWeight.bold),
                                             ),
-                                            SizedBox(height: 5,),
+                                            SizedBox(
+                                              height: 5,
+                                            ),
                                             Text(
-                                              item.nama,
+                                              item['strMeal'],
                                               overflow: TextOverflow.ellipsis,
                                               style: TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.bold
-                                              ),
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold),
                                             ),
-                                            SizedBox(height: 7,),
+                                            SizedBox(
+                                              height: 7,
+                                            ),
                                             Row(
                                               children: [
                                                 Row(
@@ -257,52 +248,52 @@ class HomePage extends StatelessWidget {
                                                     5,
                                                     (index) => Icon(
                                                       Icons.star,
-                                                      color: Color.fromARGB(255, 248, 163, 52),
+                                                      color: Color.fromARGB(
+                                                          255, 248, 163, 52),
                                                       size: 12,
                                                     ),
-                                                  ),        
-                                                ),
-                                                SizedBox(width:15),
-                                                Text(
-                                                  item.kalori,
-                                                  style: TextStyle(
-                                                    fontSize: 12,
-                                                    color: Color.fromARGB(255, 248, 163, 52),
-                                                    fontWeight: FontWeight.bold
                                                   ),
                                                 ),
+                                                SizedBox(width: 15),
                                                 Text(
-                                                      ' Kalori',
-                                                      style: TextStyle(
-                                                        fontSize: 12,
-                                                        color: Color.fromARGB(255, 248, 163, 52),
-                                                        fontWeight: FontWeight.bold
-                                                      ),
-                                                    ),
+                                                  item['strArea'],
+                                                  style: TextStyle(
+                                                      fontSize: 12,
+                                                      color: Color.fromARGB(
+                                                          255, 248, 163, 52),
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                                Text(
+                                                  ' Food',
+                                                  style: TextStyle(
+                                                      fontSize: 12,
+                                                      color: Color.fromARGB(
+                                                          255, 248, 163, 52),
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
                                               ],
-                                            ),                      
-                                            SizedBox(height: 8,),
+                                            ),
+                                            SizedBox(
+                                              height: 8,
+                                            ),
                                             Row(
                                               children: [
-                                                Icon(
-                                                  Icons.access_time,
-                                                  color: Colors.grey,
-                                                  size: 14,
-                                                ),
-                                                SizedBox(width: 5,),
-                                                Text(
-                                                  item.waktu,
-                                                  style: TextStyle(
-                                                    fontSize: 12,
-                                                    color: Colors.grey
-                                                  ),
+                                                SizedBox(
+                                                  width: 5,
                                                 ),
                                                 Text(
-                                                  ' Menit',
+                                                  '# ',
                                                   style: TextStyle(
-                                                    fontSize: 12,
-                                                    color: Colors.grey
-                                                  ),
+                                                      fontSize: 12,
+                                                      color: Colors.grey),
+                                                ),
+                                                Text(
+                                                  item['strTags'] ?? 'none',
+                                                  style: TextStyle(
+                                                      fontSize: 12,
+                                                      color: Colors.grey),
                                                 ),
                                               ],
                                             ),
@@ -313,7 +304,7 @@ class HomePage extends StatelessWidget {
                                     Align(
                                       alignment: Alignment.topRight,
                                       child: IconButton(
-                                        onPressed:(){}, 
+                                        onPressed: () {},
                                         icon: Icon(Icons.favorite_outline),
                                         color: Colors.grey,
                                       ),
@@ -330,11 +321,10 @@ class HomePage extends StatelessWidget {
                 ],
               ),
             ),
-          ),  
+          ),
         ],
       ),
     );
-    
   }
 }
 
@@ -343,7 +333,8 @@ class CategoryCircleAvatar extends StatelessWidget {
   final String foto;
   final VoidCallback onPressed;
 
-  CategoryCircleAvatar({required this.label, required this.foto, required this.onPressed});
+  CategoryCircleAvatar(
+      {required this.label, required this.foto, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -358,15 +349,16 @@ class CategoryCircleAvatar extends StatelessWidget {
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: const Color.fromARGB(255, 199, 199, 199), 
+                  color: const Color.fromARGB(255, 199, 199, 199),
                   offset: Offset(0, 1),
-                  blurRadius: 1, 
-                  spreadRadius: 1, 
+                  blurRadius: 1,
+                  spreadRadius: 1,
                 ),
               ],
             ),
             child: CircleAvatar(
-              backgroundImage: AssetImage(foto),
+              backgroundColor: Colors.white,
+              backgroundImage: NetworkImage(foto),
               radius: 40,
             ),
           ),
